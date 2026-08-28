@@ -1,0 +1,12 @@
+{
+  "name": "losfog-workbench",
+  "version": "1.0.0",
+  "private": true,
+  "description": "LOSFOG 跨境女装运营工作台",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node server.js"
+  }
+}

@@ -1,0 +1,2302 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LOSFOG 跨境女装运营工作台</title>
+<link rel="icon" href="data:,">
+<style>
+:root{
+  --primary:#4f46e5;
+  --primary-dark:#4338ca;
+  --bg:#f4f5fa;
+  --card:#ffffff;
+  --text:#1f2430;
+  --muted:#6b7280;
+  --border:#e2e5ee;
+  --green:#15803d;
+  --red:#dc2626;
+  --amber:#b45309;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:"Microsoft YaHei","PingFang SC","Segoe UI",system-ui,-apple-system,sans-serif;
+  font-size:14px;
+  line-height:1.5;
+}
+.wrap{max-width:1360px;margin:0 auto;padding:16px 16px 80px}
+header{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+header h1{font-size:21px;margin:0;color:var(--primary)}
+.header-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.user-badge{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:8px}
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px}
+@media(max-width:720px){.stat-grid{grid-template-columns:1fr}}
+.stat{padding:14px 16px}
+.stat-label{font-size:13px;color:var(--muted)}
+.stat-value{font-size:24px;font-weight:700;margin-top:4px;font-variant-numeric:tabular-nums}
+.nav{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.tab-btn{
+  border:1px solid var(--border);
+  background:var(--card);
+  color:var(--text);
+  padding:8px 16px;
+  border-radius:999px;
+  cursor:pointer;
+  font-size:14px;
+}
+.tab-btn:hover{border-color:var(--primary);color:var(--primary)}
+.tab-btn.active{background:var(--primary);border-color:var(--primary);color:#fff}
+section{display:none}
+section.active{display:block}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:14px}
+.card h2{font-size:16px;margin:0 0 12px;display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.card h3{font-size:15px;margin:16px 0 8px;color:var(--primary)}
+.hint{font-size:13px;color:var(--muted);margin:0 0 10px}
+.form-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media(max-width:820px){.form-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.form-grid{grid-template-columns:1fr}}
+.form-grid label{display:flex;flex-direction:column;gap:5px;font-size:13px;color:var(--muted)}
+.form-grid label.full{grid-column:1 / -1}
+.form-actions{display:flex;align-items:flex-end;gap:8px;flex-wrap:wrap}
+input[type="text"],input[type="number"],input[type="date"],input[type="datetime-local"],input[type="search"],input[type="password"],select,textarea{
+  width:100%;
+  padding:7px 9px;
+  border:1px solid var(--border);
+  border-radius:8px;
+  font-size:14px;
+  background:#fff;
+  color:var(--text);
+  font-family:inherit;
+}
+input:focus,select:focus,textarea:focus{outline:2px solid #c7d2fe;border-color:var(--primary)}
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:4px;
+  border:1px solid var(--border);
+  background:#fff;
+  color:var(--text);
+  padding:8px 14px;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:14px;
+  white-space:nowrap;
+}
+.btn:hover{border-color:var(--primary);color:var(--primary)}
+.btn.primary{background:var(--primary);border-color:var(--primary);color:#fff}
+.btn.primary:hover{background:var(--primary-dark)}
+.btn.tiny{padding:4px 9px;font-size:13px}
+.btn.danger:hover{border-color:var(--red);color:var(--red)}
+.batch{margin-top:12px}
+.batch summary{cursor:pointer;font-size:14px;color:var(--primary)}
+.batch textarea{margin:8px 0}
+.search{max-width:260px}
+.table-scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px;min-width:760px}
+table.wide-table{min-width:1560px}
+th,td{border:1px solid var(--border);padding:6px 8px;text-align:left;vertical-align:middle}
+th{background:#eef0f8;font-weight:600;white-space:nowrap}
+td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.actions{white-space:nowrap}
+.actions .btn{margin-right:4px}
+.empty{text-align:center;color:var(--muted);padding:20px}
+.tag{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;white-space:nowrap}
+.tag.ok{background:#e7f6ec;color:var(--green)}
+.tag.warn{background:#fef3c7;color:var(--amber)}
+.tag.gray{background:#f1f2f6;color:var(--muted)}
+.thumb{width:64px;height:48px;object-fit:cover;border-radius:6px;border:1px solid var(--border);display:block;margin:0 auto 4px;background:#f8f9fc}
+.img-ph{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:64px;height:48px;border-radius:6px;background:#eef1ff;color:var(--primary);
+  font-size:14px;font-weight:600;margin-bottom:4px;
+}
+.img-cell{text-align:center;min-width:100px}
+.stock.neg{color:var(--red);font-weight:700}
+.stock.low{color:var(--amber);font-weight:700}
+.profit-pos{color:var(--green);font-weight:700}
+.profit-neg{color:var(--red);font-weight:700}
+td input,td select{min-width:90px}
+.order-no{font-weight:700}
+.item-head{font-size:13px;color:var(--muted);margin:14px 0 8px}
+.item-row{display:grid;grid-template-columns:1fr 1.5fr .7fr .9fr .8fr auto;gap:8px;margin-bottom:8px;align-items:center}
+@media(max-width:820px){.item-row{grid-template-columns:1fr 1fr}}
+.cny-preview{font-size:13px;color:var(--muted);white-space:nowrap;text-align:right}
+.img-thumb-wrap{display:inline-flex;flex-direction:column;align-items:center;gap:3px;margin:0 6px 6px 0}
+.img-thumb-wrap .thumb{width:72px;height:56px}
+.help h3{font-size:15px;margin:16px 0 6px;color:var(--primary)}
+.help p,.help li{font-size:14px;margin:4px 0}
+.help ol,.help ul{margin:4px 0;padding-left:22px}
+#toast{
+  position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);
+  background:#1f2430;color:#fff;padding:10px 18px;border-radius:10px;font-size:14px;
+  opacity:0;pointer-events:none;transition:all .25s ease;z-index:999;max-width:90vw;
+}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.login-wrap{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,#eef1ff,#f7f7ff);
+  padding:16px;
+}
+.login-card{width:380px;max-width:100%;background:#fff;border:1px solid var(--border);border-radius:14px;padding:28px}
+.login-card h1{font-size:19px;color:var(--primary);margin:0 0 6px}
+.login-card label{display:flex;flex-direction:column;gap:5px;font-size:13px;color:var(--muted);margin:12px 0}
+.login-card .btn{width:100%;margin-top:8px}
+.login-err{color:var(--red);font-size:13px;min-height:18px;margin:10px 0 0}
+body.ro .act{display:none!important}
+body.ro input:not(.search),body.ro select,body.ro textarea{pointer-events:none;background:#f1f2f6;color:#6b7280}
+.opt-row{display:flex;gap:6px;align-items:center}
+.opt-row .btn{flex-shrink:0}
+.opt-groups{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:8px}
+@media(max-width:820px){.opt-groups{grid-template-columns:1fr}}
+.opt-group{background:#f8f9fc;border:1px solid var(--border);border-radius:10px;padding:10px}
+.opt-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px}
+.opt-list{display:flex;flex-wrap:wrap;gap:6px}
+.opt-tag{display:inline-flex;align-items:center;gap:5px;background:#fff;border:1px solid var(--border);border-radius:999px;padding:4px 10px;font-size:13px}
+.opt-tag button{border:none;background:none;color:var(--red);cursor:pointer;font-size:14px;padding:0}
+.user-tabs summary{cursor:pointer;font-size:13px;color:var(--primary);white-space:nowrap}
+.tab-checks{display:grid;grid-template-columns:repeat(3,1fr);gap:4px 12px;padding:8px 0 2px;min-width:280px}
+.tab-checks label{display:flex;align-items:center;gap:5px;font-size:13px;white-space:nowrap}
+</style>
+</head>
+<body>
+
+<div id="login-view" class="login-wrap" style="display:none">
+  <div class="login-card">
+    <h1>LOSFOG 跨境女装运营工作台</h1>
+    <p class="hint">请输入管理员分配的账号（手机号）和密码登录</p>
+    <label>手机号<input type="text" id="login-phone" autocomplete="username" placeholder="手机号"></label>
+    <label>密码<input type="password" id="login-password" autocomplete="current-password" placeholder="密码"></label>
+    <button type="button" class="btn primary" id="btn-login">登录</button>
+    <p class="login-err" id="login-err"></p>
+  </div>
+</div>
+
+<div id="app-view" style="display:none">
+  <div class="wrap">
+    <header>
+      <h1>LOSFOG 跨境女装运营工作台</h1>
+      <div class="header-actions">
+        <span class="user-badge"><span id="user-badge"></span></span>
+        <button type="button" class="btn" id="btn-backup">导出备份</button>
+        <label class="btn act" id="import-label">导入备份<input type="file" id="import-file" accept=".json,application/json" hidden></label>
+        <button type="button" class="btn" id="btn-csv">导出销售CSV</button>
+        <button type="button" class="btn" id="btn-change-pw">修改我的密码</button>
+        <button type="button" class="btn" id="btn-logout">退出登录</button>
+      </div>
+    </header>
+
+    <div class="stat-grid" id="stat-grid">
+      <div class="card stat">
+        <div class="stat-label">订单总数</div>
+        <div class="stat-value" id="stat-orders">0</div>
+      </div>
+      <div class="card stat">
+        <div class="stat-label">销售额合计（CNY）</div>
+        <div class="stat-value" id="stat-sales">0.00</div>
+      </div>
+      <div class="card stat">
+        <div class="stat-label">库存预警辅料</div>
+        <div class="stat-value" id="stat-low">0</div>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <button type="button" class="tab-btn active" data-tab="tab-sales">销售表</button>
+      <button type="button" class="tab-btn" data-tab="tab-profit">利润核算</button>
+      <button type="button" class="tab-btn" data-tab="tab-aftersales">售后表</button>
+      <button type="button" class="tab-btn" data-tab="tab-materials">辅料库</button>
+      <button type="button" class="tab-btn" data-tab="tab-materialrefs">辅料表</button>
+      <button type="button" class="tab-btn" data-tab="tab-samples">样衣表</button>
+      <button type="button" class="tab-btn" data-tab="tab-rules">耗用规则</button>
+      <button type="button" class="tab-btn" data-tab="tab-rates">汇率设置</button>
+      <button type="button" class="tab-btn" data-tab="tab-options">选项设置</button>
+      <button type="button" class="tab-btn" data-tab="tab-users" id="tab-btn-users">账号管理</button>
+      <button type="button" class="tab-btn" data-tab="tab-help">使用说明</button>
+    </nav>
+
+    <section id="tab-sales" class="active">
+      <div class="card">
+        <h2 id="order-form-title">添加订单</h2>
+        <div class="form-grid">
+          <label>下单时间<input type="datetime-local" id="f-time"></label>
+          <label>订单号<input type="text" id="f-order" placeholder="从速卖通复制"></label>
+          <label>运费（不计入总价）<input type="number" id="f-freight" value="0" min="0" step="0.01"></label>
+          <div class="form-actions">
+            <button type="button" class="btn primary act" id="btn-add-order">添加订单</button>
+            <button type="button" class="btn act" id="btn-cancel-edit" style="display:none">取消编辑</button>
+          </div>
+        </div>
+        <div class="item-head">商品明细（同一个订单号可以填多个 SKU）</div>
+        <div id="order-items"></div>
+        <button type="button" class="btn act" id="btn-add-item">＋ 添加商品</button>
+        <p class="hint" id="rate-hint"></p>
+        <div class="batch">
+          <details>
+            <summary>批量粘贴订单号（只填订单号，商品信息稍后再补）</summary>
+            <textarea id="batch-orders" rows="3" placeholder="每行一个订单号"></textarea>
+            <button type="button" class="btn act" id="btn-batch">批量添加</button>
+          </details>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>订单列表 <input type="search" id="order-search" class="search" placeholder="搜索订单号 / 产品 / SKU"></h2>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>下单时间</th><th>订单号</th><th>产品</th><th>SKU</th>
+                <th>数量</th><th>单价(USD)</th><th>单价(CNY)</th><th>运费</th>
+                <th>总价(CNY)</th><th>扣库存状态</th><th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="sales-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-profit">
+      <div class="stat-grid">
+        <div class="card stat">
+          <div class="stat-label">累计销售额（CNY）</div>
+          <div class="stat-value" id="profit-sales">0.00</div>
+        </div>
+        <div class="card stat">
+          <div class="stat-label">累计利润（CNY）</div>
+          <div class="stat-value" id="profit-total">0.00</div>
+        </div>
+        <div class="card stat">
+          <div class="stat-label">待补成本订单</div>
+          <div class="stat-value" id="profit-pending">0</div>
+        </div>
+      </div>
+      <div class="card">
+        <h2>订单利润明细 <input type="search" id="profit-search" class="search" placeholder="搜索订单号 / 产品 / SKU"></h2>
+        <p class="hint">利润 = 总价(CNY) − 样衣成本(CNY) − 运费。总价 = 各SKU单价×数量之和（不含运费）；成本按 SKU 前三段在样衣表匹配。</p>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>下单时间</th><th>订单号</th><th>商品明细</th><th>总价(CNY)</th>
+                <th>成本(CNY)</th><th>运费</th><th>利润(CNY)</th><th>利润率</th><th>状态</th>
+              </tr>
+            </thead>
+            <tbody id="profit-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-aftersales">
+      <div class="card">
+        <h2 id="after-form-title">新增售后单</h2>
+        <div class="form-grid">
+          <label>下单日期<input type="datetime-local" id="as-time"></label>
+          <label>售后日期<input type="datetime-local" id="as-after"></label>
+          <label>订单号<input type="text" id="as-order" placeholder="订单号"></label>
+          <label>产品<input type="text" id="as-product" placeholder="产品名"></label>
+          <label>SKU<input type="text" id="as-sku" placeholder="如 LF-JK-002-BR-L"></label>
+          <label>售后类型<select id="as-type">
+            <option>仅退款</option><option>退款退货</option><option>补发</option>
+            <option>换货</option><option>部分退款</option><option>优惠券</option>
+          </select></label>
+          <label>售后问题原因<select id="as-reason">
+            <option>质量问题</option><option>尺码不符</option><option>色差</option><option>发错货</option>
+            <option>漏发辅料</option><option>物流丢件</option><option>物流损坏</option><option>买家不喜欢</option>
+          </select></label>
+          <label>售后状态<select id="as-status">
+            <option>待审核</option><option>已退款</option><option>已补偿优惠券</option><option>待买家寄回</option>
+            <option>仓库待签收</option><option>待检验</option><option>已完结</option><option>驳回</option>
+          </select></label>
+          <label>是否退回<select id="as-returned"><option>是</option><option>否</option></select></label>
+          <label>运费<input type="number" id="as-freight" value="0" min="0" step="0.01"></label>
+          <label>买家退回单号<input type="text" id="as-returnno" placeholder="买家退回单号"></label>
+          <label>仓库签收时间<input type="datetime-local" id="as-recv"></label>
+          <label class="full">售后图片
+            <span>
+              <label class="btn tiny act">上传图片<input type="file" id="as-img" multiple accept="image/*" hidden></label>
+              <span id="as-img-preview"></span>
+            </span>
+          </label>
+          <label class="full">问题描述<textarea id="as-desc" rows="2" placeholder="描述售后问题"></textarea></label>
+          <div class="form-actions">
+            <button type="button" class="btn primary act" id="btn-add-after">添加售后单</button>
+            <button type="button" class="btn act" id="btn-cancel-after" style="display:none">取消编辑</button>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <h2>售后列表</h2>
+        <div class="table-scroll">
+          <table class="wide-table">
+            <thead>
+              <tr>
+                <th>下单日期</th><th>售后日期</th><th>订单号</th><th>产品</th><th>SKU</th>
+                <th>售后图片</th><th>售后类型</th><th>售后问题原因</th><th>问题描述</th>
+                <th>售后状态</th><th>是否退回</th><th>运费</th><th>买家退回单号</th>
+                <th>仓库签收时间</th><th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="after-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-materials">
+      <div class="card">
+        <h2>辅料库 <button type="button" class="btn primary act" id="btn-add-mat">＋ 新增辅料</button></h2>
+        <p class="hint">当前库存自动计算 = 初始库存 − 销售表累计耗用。库存预警数量自己填，当前库存低于预警值时该行会变黄；负数变红。</p>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>辅料名称</th><th>图片</th><th>当前库存</th><th>供应商名称</th>
+                <th>初始库存（设置）</th><th>库存预警数量（设置）</th><th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="materials-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-samples">
+      <div class="card">
+        <h2 id="sample-form-title">样衣入库 / 编辑</h2>
+        <p class="hint">填写样衣信息；「供应商」「模特」「颜色」的选项在「选项设置」里维护，可随时增删；尺码固定 S/M/L/XL。</p>
+        <div class="form-grid">
+          <label>产品<input type="text" id="sp-product" placeholder="如 夹克002"></label>
+          <label>SKU<input type="text" id="sp-sku" placeholder="如 LF-JK-002-BR-L"></label>
+          <label>尺码<select id="sp-size">
+            <option>S</option><option>M</option><option>L</option><option>XL</option>
+          </select></label>
+          <label>件数<input type="number" id="sp-qty" min="1" step="1" value="1"></label>
+          <label>成本价（CNY）<input type="number" id="sp-cost" min="0" step="0.01" placeholder="0.00"></label>
+          <label>售价（CNY）<input type="number" id="sp-sale" min="0" step="0.01" placeholder="0.00"></label>
+          <label>供应商<select id="sp-supplier"></select></label>
+          <label>供应商库存<input type="number" id="sp-stock" min="0" step="1" value="0"></label>
+          <label>模特<select id="sp-model"></select></label>
+          <label>颜色<select id="sp-color"></select></label>
+          <label>到货情况<select id="sp-arrived"><option>是</option><option>否</option></select></label>
+          <label>到货时间<input type="datetime-local" id="sp-arrivetime"></label>
+          <label>寄还<select id="sp-returned"><option>是</option><option>否</option></select></label>
+          <label>寄还日期<input type="date" id="sp-returndate"></label>
+          <label>到付运费<input type="number" id="sp-payfreight" min="0" step="0.01" value="0"></label>
+          <label>寄回运费<input type="number" id="sp-returnfreight" min="0" step="0.01" value="0"></label>
+          <label class="full">面料成分<input type="text" id="sp-fabric" placeholder="面料成分"></label>
+          <label class="full">卖点<input type="text" id="sp-selling" placeholder="卖点"></label>
+          <label class="full">图片（样衣照片）
+            <span>
+              <label class="btn tiny act">上传图片<input type="file" id="sp-image" accept="image/*" hidden></label>
+              <span id="sp-image-preview"></span>
+            </span>
+          </label>
+          <label class="full">质检报告等附件（可多张）
+            <span>
+              <label class="btn tiny act">上传附件<input type="file" id="sp-files" multiple accept="image/*,.pdf" hidden></label>
+              <span id="sp-files-preview"></span>
+            </span>
+          </label>
+          <div class="form-actions">
+            <button type="button" class="btn primary act" id="btn-add-sample">添加样衣</button>
+            <button type="button" class="btn act" id="btn-cancel-sample" style="display:none">取消编辑</button>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <h2>样衣清单</h2>
+        <div class="table-scroll">
+          <table class="wide-table">
+            <thead>
+              <tr>
+                <th>产品</th><th>SKU</th><th>图片</th><th>供应商</th><th>成本价</th><th>售价</th>
+                <th>供应商库存</th><th>尺码</th><th>模特</th><th>颜色</th><th>件数</th>
+                <th>到货情况</th><th>到货时间</th><th>寄还</th><th>寄还日期</th>
+                <th>面料成分</th><th>卖点</th><th>质检报告等附件</th><th>到付运费</th><th>寄回运费</th><th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="samples-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-materialrefs">
+      <div class="card">
+        <h2>辅料表（采购参考） <button type="button" class="btn primary act" id="btn-add-ref">＋ 新增辅料</button></h2>
+        <p class="hint">记录辅料采购信息：名称、图片、供应商、MOQ、单价(RMB)、店铺链接。可新增、删减、修改。</p>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>辅料名称</th><th>图片</th><th>供应商</th><th>MOQ</th><th>单价(RMB)</th><th>店铺链接</th><th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="refs-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-rules">
+      <div class="card">
+        <h2>耗用规则 <button type="button" class="btn primary act" id="btn-add-rule">＋ 新增规则</button></h2>
+        <p class="hint">左边填款式号 SKU（只要前三段，如 LF-JK-002）。气泡袋、磨砂袋、领标按前三段匹配；尺码标不用设置，系统会按销售表 SKU 的最后一段（S/M/L/XL）自动对应「尺码标 S/M/L/XL」。</p>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>SKU（款式号，如 LF-JK-002）</th><th>气泡袋</th><th>磨砂袋</th><th>领标</th><th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="rules-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-rates">
+      <div class="card">
+        <h2>汇率设置</h2>
+        <p class="hint">销售表里 USD 单价会自动按下单日期的当日汇率换算成 CNY。没有当日记录时，用最近一条更早的汇率；再没有就用默认汇率。多平台汇率每天维护一次即可。</p>
+        <div class="form-grid">
+          <label>默认汇率（1 USD = ? CNY）<input type="number" id="rate-default" min="0" step="0.0001"></label>
+          <div class="form-actions"><button type="button" class="btn primary act" id="btn-save-default">保存默认汇率</button></div>
+        </div>
+        <h3>维护每日汇率</h3>
+        <div class="form-grid">
+          <label>日期<input type="date" id="rate-date"></label>
+          <label>当日汇率<input type="number" id="rate-value" min="0" step="0.0001"></label>
+          <div class="form-actions"><button type="button" class="btn primary act" id="btn-add-rate">添加/更新当日汇率</button></div>
+        </div>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr><th>日期</th><th>汇率</th><th>操作</th></tr>
+            </thead>
+            <tbody id="rates-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-options">
+      <div class="card">
+        <h2>选项设置</h2>
+        <p class="hint">给「样衣表」里的供应商、模特、颜色维护下拉选项，可随时增删；尺码固定为 S/M/L/XL。</p>
+        <div class="form-grid">
+          <label>供应商选项
+            <span class="opt-row">
+              <input type="text" id="opt-supplier-input" placeholder="如 XX制衣厂">
+              <button type="button" class="btn tiny primary act" id="btn-add-supplier-opt">添加</button>
+            </span>
+          </label>
+          <label>模特选项
+            <span class="opt-row">
+              <input type="text" id="opt-model-input" placeholder="如 模特小美">
+              <button type="button" class="btn tiny primary act" id="btn-add-model-opt">添加</button>
+            </span>
+          </label>
+          <label>颜色选项
+            <span class="opt-row">
+              <input type="text" id="opt-color-input" placeholder="如 棕色">
+              <button type="button" class="btn tiny primary act" id="btn-add-color-opt">添加</button>
+            </span>
+          </label>
+        </div>
+        <h3>现有选项</h3>
+        <div class="opt-groups">
+          <div class="opt-group"><div class="opt-title">供应商</div><div class="opt-list" id="opt-supplier-list"></div></div>
+          <div class="opt-group"><div class="opt-title">模特</div><div class="opt-list" id="opt-model-list"></div></div>
+          <div class="opt-group"><div class="opt-title">颜色</div><div class="opt-list" id="opt-color-list"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-users">
+      <div class="card">
+        <h2>账号管理</h2>
+        <p class="hint">角色权限：管理员 = 全部权限（含账号管理）；编辑 = 可录入和修改数据；只读 = 只能查看；样衣专员 = 只能看和编辑样衣表。每个账号还可以在「可见表格」里单独勾选能看到哪些表格（比如只勾样衣表，就完全看不到订单、统计、辅料等其他内容）。手机号可以直接在表里修改（改自己的手机号后，下次登录用新手机号）；管理员可以看到所有人的密码（明文保存在本机，请注意保密，不要外传这个文件夹）。</p>
+        <div class="form-grid">
+          <label>姓名<input type="text" id="u-name" placeholder="同事姓名"></label>
+          <label>手机号<input type="text" id="u-phone" placeholder="手机号，作为登录账号"></label>
+          <label>角色<select id="u-role">
+            <option value="editor">编辑</option>
+            <option value="viewer">只读</option>
+            <option value="samples">样衣专员（只能看和编辑样衣表）</option>
+            <option value="admin">管理员</option>
+          </select></label>
+          <label>初始密码<input type="text" id="u-password" placeholder="至少4位"></label>
+          <div class="form-actions"><button type="button" class="btn primary act" id="btn-add-user">添加账号</button></div>
+        </div>
+        <div class="table-scroll">
+          <table>
+            <thead>
+          <tr><th>姓名</th><th>手机号（可修改）</th><th>密码（管理员可见）</th><th>角色</th><th>可见表格</th><th>操作</th></tr>
+            </thead>
+            <tbody id="users-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-help">
+      <div class="card help">
+        <h2>使用说明</h2>
+        <h3>登录与权限</h3>
+        <p>管理员在「账号管理」里添加同事的手机号并分配角色；同事用手机号+密码登录。管理员初始账号：13800000000，密码：admin123，登录后请立即修改密码和手机号。</p>
+        <p>角色：管理员 = 全部权限；编辑 = 可录入和修改数据；只读 = 只能查看；样衣专员 = 只能看和编辑样衣表。管理员还可以在「账号管理 → 设置可见表格」里给每个账号单独勾选能看到的表格（例如只勾「样衣表」，对方登录后顶部统计和其他页面都不会出现）。管理员可以修改所有人的手机号、重置密码，也可以看到当前密码（明文保存）。任何人登录后都可以点右上角「修改我的密码」自己改密码。</p>
+        <h3>SKU 规则（重点）</h3>
+        <p>SKU 格式如 LF-JK-002-BR-L（品牌-款式-款号-颜色-尺码）。「耗用规则」里只填前三个字段，例如 LF-JK-002；气泡袋、磨砂袋、领标按它匹配。尺码标不需要设置：系统自动取销售表 SKU 的最后一段（S/M/L/XL）对应「尺码标 S/M/L/XL」。样衣成本先按完整 SKU 匹配，匹配不到再按前三个字段匹配。</p>
+        <h3>样衣表 / 辅料表 / 选项设置</h3>
+        <p>样衣表按产品、SKU、图片、供应商、成本价、售价、供应商库存、尺码、模特、颜色、件数、到货、寄还、面料、卖点、附件、运费等完整记录；供应商、模特、颜色这些下拉选项在「选项设置」里维护，可随时增删。「辅料表」记录采购参考（MOQ、单价、店铺链接），与「辅料库」的库存是两回事。</p>
+        <h3>多商品订单</h3>
+        <p>一个订单号可以填多个 SKU：点「＋ 添加商品」继续加行。总价 = 各 SKU 单价×数量之和（不含运费）。运费单独填，只参与利润计算。</p>
+        <h3>汇率</h3>
+        <p>「汇率设置」里维护每日 USD→CNY 汇率；销售表单价填 USD，系统按下单日期自动换算成 CNY 单价并计算总价。</p>
+        <h3>利润</h3>
+        <p>利润 = 总价(CNY) − 样衣成本 − 运费。样衣成本在「样衣表」录入，成本找不到的订单会标「待补成本」，不计入累计利润。</p>
+        <h3>售后表</h3>
+        <p>记录退款、退货、补发、换货等售后单，可上传售后图片；各选项按固定下拉填写。</p>
+        <h3>数据保存与访问</h3>
+        <ul>
+          <li>数据保存在运行本程序的电脑上（data 文件夹），所有同事通过同一个网址访问，数据实时同步。</li>
+          <li>同事访问方式：和你在同一个网络下，浏览器打开启动时显示的「局域网访问」地址。</li>
+          <li>要让不同网络（线上办公、出差）也能访问：需要把程序部署到有公网地址的云服务器上，或使用内网穿透工具（ngrok / cpolar / 花生壳），详见文件夹里的 README.txt。</li>
+          <li>建议定期点「导出备份」；换电脑时复制整个文件夹即可迁移。</li>
+        </ul>
+      </div>
+    </section>
+  </div>
+</div>
+
+<div id="toast" role="status"></div>
+
+<script>
+'use strict';
+const TOKEN_KEY = 'losfog_token';
+let state = null;
+let currentUser = null;
+let editingOrderId = null;
+let editingAfterSaleId = null;
+let editingSampleId = null;
+let orderFilter = '';
+let profitFilter = '';
+let saveTimer = null;
+let asImages = [];
+let spImage = '';
+let spAttachments = [];
+
+const AFTER_TYPES = ['仅退款','退款退货','补发','换货','部分退款','优惠券'];
+const AFTER_REASONS = ['质量问题','尺码不符','色差','发错货','漏发辅料','物流丢件','物流损坏','买家不喜欢'];
+const AFTER_STATUS = ['待审核','已退款','已补偿优惠券','待买家寄回','仓库待签收','待检验','已完结','驳回'];
+const ROLE_NAMES = {admin:'管理员', editor:'编辑', viewer:'只读', samples:'样衣专员'};
+const ALL_TABS = ['sales','profit','aftersales','materials','materialrefs','samples','rules','rates','options'];
+const TAB_NAMES = {sales:'销售表', profit:'利润核算', aftersales:'售后表', materials:'辅料库', materialrefs:'辅料表', samples:'样衣表', rules:'耗用规则', rates:'汇率设置', options:'选项设置'};
+
+// ---------- 通用 ----------
+function esc(s){
+  return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+  });
+}
+
+function uid(prefix){
+  return prefix + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+}
+
+function pad(n){ return String(n).padStart(2, '0'); }
+
+function nowLocalInput(){
+  const d = new Date();
+  return d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate()) + 'T' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+}
+
+function todayStr(){
+  const d = new Date();
+  return d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate());
+}
+
+function fmtDT(s){
+  return s ? String(s).replace('T', ' ') : '';
+}
+
+function toast(msg){
+  let el = document.getElementById('toast');
+  if(!el){
+    el = document.createElement('div');
+    el.id = 'toast';
+    document.body.appendChild(el);
+  }
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(el._t);
+  el._t = setTimeout(function(){ el.classList.remove('show'); }, 2600);
+}
+
+// ---------- 网络 ----------
+async function api(method, url, body){
+  const token = localStorage.getItem(TOKEN_KEY) || '';
+  const opts = {method:method, headers:{}};
+  if(body !== undefined){
+    opts.headers['Content-Type'] = 'application/json';
+    opts.body = JSON.stringify(body);
+  }
+  if(token) opts.headers['Authorization'] = 'Bearer ' + token;
+  let res;
+  try{
+    res = await fetch(url, opts);
+  }catch(e){
+    throw new Error('无法连接服务器：请确认「启动工作台.bat」的黑色窗口是否还在运行，然后刷新页面重试。');
+  }
+  const data = await res.json().catch(function(){ return {}; });
+  if(res.status === 401 && url !== '/api/login'){
+    showLogin();
+    throw new Error('登录已过期，请重新登录');
+  }
+  if(!res.ok) throw new Error(data.error || ('请求失败（HTTP ' + res.status + '）'));
+  return data;
+}
+
+function canEdit(){ return currentUser && currentUser.role !== 'viewer'; }
+function isAdmin(){ return currentUser && currentUser.role === 'admin'; }
+
+function canSee(tab){
+  if(!currentUser) return false;
+  const tabs = Array.isArray(currentUser.tabs) && currentUser.tabs.length ? currentUser.tabs : (currentUser.role === 'samples' ? ['samples'] : ALL_TABS);
+  return tabs.indexOf(tab) > -1;
+}
+
+function fullStatsVisible(){
+  return canSee('sales') && canSee('profit') && canSee('materials');
+}
+
+function ensureStateDefaults(){
+  state.orders = state.orders || [];
+  state.samples = state.samples || [];
+  state.materials = state.materials || [];
+  state.rules = state.rules || [];
+  state.afterSales = state.afterSales || [];
+  state.materialRefs = state.materialRefs || [];
+  state.supplierOptions = state.supplierOptions || [];
+  state.modelOptions = state.modelOptions || [];
+  state.colorOptions = state.colorOptions || [];
+  state.rates = state.rates || [];
+  if(typeof state.defaultRate !== 'number') state.defaultRate = 7.1;
+}
+
+function applyRole(){
+  document.body.classList.toggle('ro', !canEdit());
+  document.querySelectorAll('.tab-btn').forEach(function(b){
+    if(b.dataset.tab === 'tab-users'){
+      b.style.display = isAdmin() ? '' : 'none';
+    }else{
+      b.style.display = canSee(b.dataset.tab.slice(4)) ? '' : 'none';
+    }
+  });
+  const statsOk = fullStatsVisible();
+  document.getElementById('stat-grid').style.display = statsOk ? '' : 'none';
+  const fullData = ['sales','profit','materials','samples'].every(function(t){ return canSee(t); });
+  document.getElementById('btn-backup').style.display = fullData ? '' : 'none';
+  document.getElementById('btn-csv').style.display = fullData ? '' : 'none';
+  document.getElementById('import-label').style.display = fullData ? '' : 'none';
+  document.getElementById('user-badge').textContent = (currentUser ? currentUser.name + '（' + (ROLE_NAMES[currentUser.role] || currentUser.role) + '）' : '');
+}
+
+function showLogin(){
+  document.getElementById('app-view').style.display = 'none';
+  document.getElementById('login-view').style.display = 'flex';
+  document.getElementById('login-err').textContent = '';
+  const isFile = (typeof window !== 'undefined' && window.location && window.location.protocol === 'file:');
+  if(isFile){
+    document.getElementById('login-err').textContent = '你正在直接打开网页文件，这样无法登录。请先双击「启动工作台.bat」启动服务，再用浏览器打开 http://localhost:3000 登录。';
+    document.getElementById('login-phone').disabled = true;
+    document.getElementById('login-password').disabled = true;
+    document.getElementById('btn-login').disabled = true;
+  }else{
+    document.getElementById('login-phone').disabled = false;
+    document.getElementById('login-password').disabled = false;
+    document.getElementById('btn-login').disabled = false;
+  }
+}
+
+function enterApp(){
+  document.getElementById('login-view').style.display = 'none';
+  document.getElementById('app-view').style.display = 'block';
+  applyRole();
+  renderAll();
+  if(!canSee('sales')){
+    const first = Array.from(document.querySelectorAll('.tab-btn')).find(function(b){
+      return b.style.display !== 'none';
+    });
+    if(first) first.click();
+  }
+}
+
+function scheduleSave(){
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(async function(){
+    try{
+      await api('PUT', '/api/state', {state:state});
+    }catch(e){
+      toast('保存失败：' + e.message);
+    }
+  }, 400);
+}
+
+// ---------- 核心逻辑 ----------
+function baseSku(sku){
+  if(!sku) return '';
+  return String(sku).trim().split('-').slice(0, 3).join('-');
+}
+
+function getRate(dateStr){
+  if(!dateStr) dateStr = todayStr();
+  const list = (state.rates || []).slice().sort(function(a, b){
+    return a.date < b.date ? -1 : (a.date > b.date ? 1 : 0);
+  });
+  let fallback = null;
+  for(const r of list){
+    if(r.date === dateStr) return Number(r.rate) || 0;
+    if(r.date < dateStr) fallback = Number(r.rate);
+    else break;
+  }
+  if(fallback !== null) return fallback;
+  return Number(state.defaultRate) || 0;
+}
+
+function matchRule(item){
+  const b = baseSku(item.sku);
+  if(!b) return null;
+  for(const r of state.rules){
+    if(r.key && baseSku(r.key) === b) return r;
+  }
+  return null;
+}
+
+function findSampleFor(item){
+  if(item.sku){
+    const exact = state.samples.find(function(s){ return s.sku && s.sku === item.sku; });
+    if(exact) return exact;
+    const byBase = state.samples.find(function(s){
+      return s.sku && baseSku(s.sku) === baseSku(item.sku);
+    });
+    if(byBase) return byBase;
+  }
+  return null;
+}
+
+function orderTotal(o){
+  const rate = getRate((o.time || '').slice(0, 10));
+  return (o.items || []).reduce(function(s, it){
+    return s + (Number(it.qty) || 0) * (Number(it.usd) || 0) * rate;
+  }, 0);
+}
+
+function orderProfit(o){
+  const total = orderTotal(o);
+  const freight = Number(o.freight) || 0;
+  let cost = 0;
+  for(const it of (o.items || [])){
+    const sample = findSampleFor(it);
+    if(!sample) return {ok:false, reason:'待补成本'};
+    cost += (Number(sample.cost) || 0) * (Number(it.qty) || 0);
+  }
+  const profit = total - cost - freight;
+  return {ok:true, total:total, cost:cost, freight:freight, profit:profit, margin: total > 0 ? profit / total : 0};
+}
+
+function consumptionOf(matId){
+  let total = 0;
+  for(const o of state.orders){
+    for(const it of (o.items || [])){
+      const r = matchRule(it);
+      if(!r) continue;
+      const qty = Number(it.qty) || 0;
+      if(r.bubble === matId || r.frosted === matId || r.label === matId){
+        total += qty;
+        continue;
+      }
+      const sizeName = sizeLabelFor(it.sku);
+      if(sizeName){
+        const sizeMat = (state.materials || []).find(function(m){ return m.name === sizeName; });
+        if(sizeMat && sizeMat.id === matId) total += qty;
+      }
+    }
+  }
+  return total;
+}
+
+function sizeLabelFor(sku){
+  const parts = String(sku || '').trim().split('-');
+  const seg = parts.length ? parts[parts.length - 1] : '';
+  if(['S','M','L','XL'].indexOf(seg) > -1) return '尺码标 ' + seg;
+  return '';
+}
+
+function stockOf(mat){
+  return (Number(mat.initialStock) || 0) - consumptionOf(mat.id);
+}
+
+function matAlert(m){
+  const stock = stockOf(m);
+  if(stock < 0) return 'neg';
+  if(Number(m.warning) > 0 && stock <= Number(m.warning)) return 'low';
+  return '';
+}
+
+// ---------- 渲染：概览 ----------
+function renderSummary(){
+  if(!fullStatsVisible()) return;
+  const totalOrders = (state.orders || []).length;
+  const totalSales = (state.orders || []).reduce(function(s, o){ return s + orderTotal(o); }, 0);
+  const low = (state.materials || []).filter(function(m){ return matAlert(m) !== ''; }).length;
+  document.getElementById('stat-orders').textContent = totalOrders;
+  document.getElementById('stat-sales').textContent = totalSales.toFixed(2);
+  document.getElementById('stat-low').textContent = low;
+}
+
+// ---------- 渲染：销售表 ----------
+function renderSales(){
+  const tb = document.getElementById('sales-tbody');
+  const q = orderFilter.trim().toLowerCase();
+  const rows = state.orders.filter(function(o){
+    if(!q) return true;
+    const items = o.items || [];
+    return (o.orderNo || '').toLowerCase().indexOf(q) > -1 ||
+      items.some(function(it){
+        return (it.product || '').toLowerCase().indexOf(q) > -1 ||
+               (it.sku || '').toLowerCase().indexOf(q) > -1;
+      });
+  });
+  if(!rows.length){
+    tb.innerHTML = '<tr><td colspan="11" class="empty">还没有订单，先在上方录入。</td></tr>';
+    return;
+  }
+  let html = '';
+  rows.forEach(function(o){
+    const rate = getRate((o.time || '').slice(0, 10));
+    const total = orderTotal(o);
+    const freight = Number(o.freight) || 0;
+    const items = o.items && o.items.length ? o.items : [{product:'', sku:'', qty:1, usd:0}];
+    items.forEach(function(it, idx){
+      const isFirst = idx === 0;
+      const usd = Number(it.usd) || 0;
+      const cny = usd * rate;
+      const r = matchRule(it);
+      let tag;
+      if(!it.sku){
+        tag = '<span class="tag gray">未填SKU</span>';
+      }else if(r){
+        tag = '<span class="tag ok">已匹配 · 自动扣库存</span>';
+      }else{
+        tag = '<span class="tag warn">未匹配 · 不扣库存</span>';
+      }
+      html += '<tr data-id="' + o.id + '">' +
+        '<td>' + esc(fmtDT(o.time)) + '</td>' +
+        '<td class="' + (isFirst ? 'order-no' : '') + '">' + (isFirst ? esc(o.orderNo) : '') + '</td>' +
+        '<td>' + esc(it.product) + '</td>' +
+        '<td>' + esc(it.sku) + '</td>' +
+        '<td class="num">' + (Number(it.qty) || 0) + '</td>' +
+        '<td class="num">' + usd.toFixed(2) + '</td>' +
+        '<td class="num">' + cny.toFixed(2) + '</td>' +
+        '<td class="num">' + (isFirst ? freight.toFixed(2) : '') + '</td>' +
+        '<td class="num">' + (isFirst ? total.toFixed(2) : '') + '</td>' +
+        '<td>' + tag + '</td>' +
+        '<td class="actions">' + (isFirst
+          ? '<button type="button" class="btn tiny act" data-js="edit-order" data-id="' + o.id + '">编辑</button>' +
+            '<button type="button" class="btn tiny danger act" data-js="del-order" data-id="' + o.id + '">删除</button>'
+          : '') + '</td>' +
+      '</tr>';
+    });
+  });
+  tb.innerHTML = html;
+}
+
+// ---------- 渲染：利润 ----------
+function renderProfit(){
+  const tb = document.getElementById('profit-tbody');
+  const q = profitFilter.trim().toLowerCase();
+  const rows = state.orders.filter(function(o){
+    if(!q) return true;
+    const items = o.items || [];
+    return (o.orderNo || '').toLowerCase().indexOf(q) > -1 ||
+      items.some(function(it){
+        return (it.product || '').toLowerCase().indexOf(q) > -1 ||
+               (it.sku || '').toLowerCase().indexOf(q) > -1;
+      });
+  });
+  let totalSales = 0, totalProfit = 0, pending = 0;
+  if(!rows.length){
+    tb.innerHTML = '<tr><td colspan="9" class="empty">还没有订单，先去「销售表」录入。</td></tr>';
+  }else{
+    let html = '';
+    rows.forEach(function(o){
+      const total = orderTotal(o);
+      totalSales += total;
+      const p = orderProfit(o);
+      if(p.ok){
+        totalProfit += p.profit;
+      }else{
+        pending++;
+      }
+      const items = (o.items || []).map(function(it){
+        return (it.product || '?') + '×' + (Number(it.qty) || 0) + (it.sku ? '(' + it.sku + ')' : '');
+      }).join('、');
+      const profitHtml = p.ok
+        ? '<span class="' + (p.profit >= 0 ? 'profit-pos' : 'profit-neg') + '">' + p.profit.toFixed(2) + '</span>'
+        : '<span class="tag warn">待补成本</span>';
+      html += '<tr data-id="' + o.id + '">' +
+        '<td>' + esc(fmtDT(o.time)) + '</td>' +
+        '<td class="order-no">' + esc(o.orderNo) + '</td>' +
+        '<td>' + esc(items) + '</td>' +
+        '<td class="num">' + total.toFixed(2) + '</td>' +
+        '<td class="num">' + (p.ok ? p.cost.toFixed(2) : '—') + '</td>' +
+        '<td class="num">' + (Number(o.freight) || 0).toFixed(2) + '</td>' +
+        '<td class="num">' + profitHtml + '</td>' +
+        '<td class="num">' + (p.ok ? (p.margin * 100).toFixed(1) + '%' : '—') + '</td>' +
+        '<td>' + (p.ok ? '<span class="tag ok">已核算</span>' : '<span class="tag warn">待补成本</span>') + '</td>' +
+      '</tr>';
+    });
+    tb.innerHTML = html;
+  }
+  document.getElementById('profit-sales').textContent = totalSales.toFixed(2);
+  document.getElementById('profit-total').textContent = totalProfit.toFixed(2);
+  document.getElementById('profit-pending').textContent = pending;
+}
+
+// ---------- 渲染：辅料库 ----------
+function renderMaterials(){
+  const tb = document.getElementById('materials-tbody');
+  if(!state.materials.length){
+    tb.innerHTML = '<tr><td colspan="7" class="empty">还没有辅料，点「＋ 新增辅料」添加。</td></tr>';
+    return;
+  }
+  tb.innerHTML = state.materials.map(function(m){
+    const stock = stockOf(m);
+    const alertCls = matAlert(m);
+    const stockCls = alertCls === 'neg' ? 'stock neg' : (alertCls === 'low' ? 'stock low' : 'stock');
+    let imgHtml;
+    if(m.image){
+      imgHtml = '<img class="thumb" src="' + m.image + '" alt=""><br>' +
+        '<button type="button" class="btn tiny danger act" data-js="remove-img" data-id="' + m.id + '">移除</button>';
+    }else{
+      imgHtml = '<span class="img-ph">' + esc((m.name || '').slice(0, 2)) + '</span>';
+    }
+    return '<tr data-id="' + m.id + '">' +
+      '<td><input class="js-m-name" value="' + esc(m.name) + '"></td>' +
+      '<td class="img-cell">' + imgHtml +
+        '<label class="btn tiny act">上传<input type="file" class="js-img" data-id="' + m.id + '" accept="image/*" hidden></label>' +
+      '</td>' +
+      '<td class="num ' + stockCls + '">' + stock + '</td>' +
+      '<td><input class="js-m-supplier" value="' + esc(m.supplier) + '" placeholder="供应商"></td>' +
+      '<td><input class="js-m-initial" type="number" min="0" step="1" value="' + (Number(m.initialStock) || 0) + '"></td>' +
+      '<td><input class="js-m-warning" type="number" min="0" step="1" value="' + (Number(m.warning) || 0) + '"></td>' +
+      '<td class="actions"><button type="button" class="btn tiny danger act" data-js="del-mat" data-id="' + m.id + '">删除</button></td>' +
+    '</tr>';
+  }).join('');
+}
+
+// ---------- 渲染：样衣表 ----------
+function renderSamples(){
+  const tb = document.getElementById('samples-tbody');
+  if(!state.samples.length){
+    tb.innerHTML = '<tr><td colspan="21" class="empty">还没有样衣，先在上方填写并添加。</td></tr>';
+    return;
+  }
+  tb.innerHTML = state.samples.map(function(s){
+    const imgHtml = s.image
+      ? '<img class="thumb" src="' + s.image + '" alt="">'
+      : '<span class="tag gray">无</span>';
+    const attHtml = (s.attachments || []).map(function(d){
+      return String(d).indexOf('data:image') === 0
+        ? '<img class="thumb" src="' + d + '" alt="">'
+        : '<span class="tag gray">附件</span>';
+    }).join('') || '<span class="tag gray">无</span>';
+    return '<tr data-id="' + s.id + '">' +
+      '<td>' + esc(s.product) + '</td>' +
+      '<td>' + esc(s.sku) + '</td>' +
+      '<td class="img-cell">' + imgHtml + '</td>' +
+      '<td>' + esc(s.supplier) + '</td>' +
+      '<td class="num">' + (Number(s.cost) || 0).toFixed(2) + '</td>' +
+      '<td class="num">' + (Number(s.salePrice) || 0).toFixed(2) + '</td>' +
+      '<td class="num">' + (Number(s.supplierStock) || 0) + '</td>' +
+      '<td>' + esc(s.size) + '</td>' +
+      '<td>' + esc(s.model) + '</td>' +
+      '<td>' + esc(s.color) + '</td>' +
+      '<td class="num">' + (Number(s.qty) || 0) + '</td>' +
+      '<td>' + esc(s.arrived) + '</td>' +
+      '<td>' + esc(fmtDT(s.arriveTime)) + '</td>' +
+      '<td>' + esc(s.returned) + '</td>' +
+      '<td>' + esc(s.returnDate || '') + '</td>' +
+      '<td>' + esc(s.fabric) + '</td>' +
+      '<td>' + esc(s.sellingPoint) + '</td>' +
+      '<td class="img-cell">' + attHtml + '</td>' +
+      '<td class="num">' + (Number(s.payFreight) || 0).toFixed(2) + '</td>' +
+      '<td class="num">' + (Number(s.returnFreight) || 0).toFixed(2) + '</td>' +
+      '<td class="actions">' +
+        '<button type="button" class="btn tiny act" data-js="edit-sample" data-id="' + s.id + '">编辑</button>' +
+        '<button type="button" class="btn tiny danger act" data-js="del-sample" data-id="' + s.id + '">删除</button>' +
+      '</td>' +
+    '</tr>';
+  }).join('');
+}
+
+function renderSampleSelects(){
+  const sup = document.getElementById('sp-supplier');
+  const mod = document.getElementById('sp-model');
+  const col = document.getElementById('sp-color');
+  const opts = function(list){
+    if(!list.length) return '<option value="">（请先在选项设置添加）</option>';
+    return list.map(function(x){ return '<option value="' + esc(x) + '">' + esc(x) + '</option>'; }).join('');
+  };
+  sup.innerHTML = opts(state.supplierOptions || []);
+  mod.innerHTML = opts(state.modelOptions || []);
+  col.innerHTML = opts(state.colorOptions || []);
+}
+
+function renderSpImagePreview(){
+  const box = document.getElementById('sp-image-preview');
+  box.innerHTML = spImage
+    ? '<span class="img-thumb-wrap"><img class="thumb" src="' + spImage + '" alt=""><button type="button" class="btn tiny danger act" data-js="remove-sp-image">×</button></span>'
+    : '<span class="hint">未上传图片</span>';
+}
+
+function renderSpFilesPreview(){
+  const box = document.getElementById('sp-files-preview');
+  box.innerHTML = spAttachments.map(function(d, i){
+    const inner = String(d).indexOf('data:image') === 0
+      ? '<img class="thumb" src="' + d + '" alt="">'
+      : '<span class="tag gray">附件</span>';
+    return '<span class="img-thumb-wrap">' + inner + '<button type="button" class="btn tiny danger act" data-js="remove-sp-file" data-i="' + i + '">×</button></span>';
+  }).join('') || '<span class="hint">未上传附件</span>';
+}
+
+function resetSampleForm(){
+  editingSampleId = null;
+  document.getElementById('sp-product').value = '';
+  document.getElementById('sp-sku').value = '';
+  document.getElementById('sp-size').value = 'M';
+  document.getElementById('sp-qty').value = 1;
+  document.getElementById('sp-cost').value = '';
+  document.getElementById('sp-sale').value = '';
+  document.getElementById('sp-stock').value = 0;
+  document.getElementById('sp-arrived').value = '否';
+  document.getElementById('sp-arrivetime').value = '';
+  document.getElementById('sp-returned').value = '否';
+  document.getElementById('sp-returndate').value = '';
+  document.getElementById('sp-payfreight').value = 0;
+  document.getElementById('sp-returnfreight').value = 0;
+  document.getElementById('sp-fabric').value = '';
+  document.getElementById('sp-selling').value = '';
+  renderSampleSelects();
+  document.getElementById('sp-supplier').value = '';
+  document.getElementById('sp-model').value = '';
+  document.getElementById('sp-color').value = '';
+  spImage = '';
+  spAttachments = [];
+  renderSpImagePreview();
+  renderSpFilesPreview();
+  document.getElementById('btn-add-sample').textContent = '添加样衣';
+  document.getElementById('sample-form-title').textContent = '样衣入库 / 编辑';
+  document.getElementById('btn-cancel-sample').style.display = 'none';
+}
+
+function fillSampleForm(s){
+  editingSampleId = s.id;
+  document.getElementById('sp-product').value = s.product || '';
+  document.getElementById('sp-sku').value = s.sku || '';
+  renderSampleSelects();
+  document.getElementById('sp-size').value = s.size || 'M';
+  document.getElementById('sp-qty').value = s.qty || 1;
+  document.getElementById('sp-cost').value = s.cost || '';
+  document.getElementById('sp-sale').value = s.salePrice || '';
+  document.getElementById('sp-stock').value = s.supplierStock || 0;
+  document.getElementById('sp-supplier').value = s.supplier || '';
+  document.getElementById('sp-model').value = s.model || '';
+  document.getElementById('sp-color').value = s.color || '';
+  document.getElementById('sp-arrived').value = s.arrived || '否';
+  document.getElementById('sp-arrivetime').value = s.arriveTime || '';
+  document.getElementById('sp-returned').value = s.returned || '否';
+  document.getElementById('sp-returndate').value = s.returnDate || '';
+  document.getElementById('sp-payfreight').value = s.payFreight || 0;
+  document.getElementById('sp-returnfreight').value = s.returnFreight || 0;
+  document.getElementById('sp-fabric').value = s.fabric || '';
+  document.getElementById('sp-selling').value = s.sellingPoint || '';
+  spImage = s.image || '';
+  spAttachments = (s.attachments || []).slice();
+  renderSpImagePreview();
+  renderSpFilesPreview();
+  document.getElementById('btn-add-sample').textContent = '保存修改';
+  document.getElementById('sample-form-title').textContent = '编辑样衣';
+  document.getElementById('btn-cancel-sample').style.display = 'inline-flex';
+}
+
+function collectSampleForm(){
+  return {
+    product: document.getElementById('sp-product').value.trim(),
+    sku: document.getElementById('sp-sku').value.trim(),
+    size: document.getElementById('sp-size').value,
+    qty: Math.max(0, Math.floor(Number(document.getElementById('sp-qty').value) || 0)),
+    cost: Math.max(0, Number(document.getElementById('sp-cost').value) || 0),
+    salePrice: Math.max(0, Number(document.getElementById('sp-sale').value) || 0),
+    supplier: document.getElementById('sp-supplier').value,
+    supplierStock: Math.max(0, Math.floor(Number(document.getElementById('sp-stock').value) || 0)),
+    model: document.getElementById('sp-model').value,
+    color: document.getElementById('sp-color').value,
+    arrived: document.getElementById('sp-arrived').value,
+    arriveTime: document.getElementById('sp-arrivetime').value || '',
+    returned: document.getElementById('sp-returned').value,
+    returnDate: document.getElementById('sp-returndate').value || '',
+    payFreight: Math.max(0, Number(document.getElementById('sp-payfreight').value) || 0),
+    returnFreight: Math.max(0, Number(document.getElementById('sp-returnfreight').value) || 0),
+    fabric: document.getElementById('sp-fabric').value.trim(),
+    sellingPoint: document.getElementById('sp-selling').value.trim(),
+    image: spImage,
+    attachments: spAttachments.slice(),
+  };
+}
+
+function renderMaterialRefs(){
+  const tb = document.getElementById('refs-tbody');
+  if(!state.materialRefs.length){
+    tb.innerHTML = '<tr><td colspan="7" class="empty">还没有辅料采购记录，点「＋ 新增辅料」添加。</td></tr>';
+    return;
+  }
+  tb.innerHTML = state.materialRefs.map(function(r){
+    const imgHtml = r.image
+      ? '<img class="thumb" src="' + r.image + '" alt=""><br><button type="button" class="btn tiny danger act" data-js="remove-ref-img" data-id="' + r.id + '">移除</button>'
+      : '<span class="img-ph">' + esc((r.name || '辅').slice(0, 2)) + '</span>';
+    return '<tr data-id="' + r.id + '">' +
+      '<td><input class="js-rf-name" value="' + esc(r.name) + '"></td>' +
+      '<td class="img-cell">' + imgHtml +
+        '<label class="btn tiny act">上传<input type="file" class="js-rf-img" data-id="' + r.id + '" accept="image/*" hidden></label>' +
+      '</td>' +
+      '<td><input class="js-rf-supplier" value="' + esc(r.supplier) + '"></td>' +
+      '<td><input class="js-rf-moq" value="' + esc(r.moq) + '"></td>' +
+      '<td><input class="js-rf-price" type="number" min="0" step="0.01" value="' + (Number(r.price) || 0) + '"></td>' +
+      '<td><input class="js-rf-link" value="' + esc(r.link) + '" placeholder="https://..."></td>' +
+      '<td class="actions"><button type="button" class="btn tiny danger act" data-js="del-ref" data-id="' + r.id + '">删除</button></td>' +
+    '</tr>';
+  }).join('');
+}
+
+function renderOptions(){
+  const renderList = function(id, key, list){
+    const box = document.getElementById(id);
+    box.innerHTML = list.map(function(x, i){
+      return '<span class="opt-tag">' + esc(x) + '<button type="button" class="act" data-js="del-opt" data-key="' + key + '" data-i="' + i + '">×</button></span>';
+    }).join('') || '<span class="hint">暂无选项</span>';
+  };
+  renderList('opt-supplier-list', 'supplierOptions', state.supplierOptions || []);
+  renderList('opt-model-list', 'modelOptions', state.modelOptions || []);
+  renderList('opt-color-list', 'colorOptions', state.colorOptions || []);
+}
+
+// ---------- 渲染：耗用规则 ----------
+function renderRules(){
+  const tb = document.getElementById('rules-tbody');
+  const opts = function(selId){
+    if(!state.materials.length) return '<option value="">（请先添加辅料）</option>';
+    return state.materials.map(function(m){
+      return '<option value="' + m.id + '"' + (m.id === selId ? ' selected' : '') + '>' + esc(m.name) + '</option>';
+    }).join('');
+  };
+  if(!state.rules.length){
+    tb.innerHTML = '<tr><td colspan="5" class="empty">还没有耗用规则，点「＋ 新增规则」添加。</td></tr>';
+    return;
+  }
+  tb.innerHTML = state.rules.map(function(r){
+    return '<tr data-id="' + r.id + '">' +
+      '<td><input class="js-r-key" value="' + esc(r.key) + '" placeholder="如 LF-JK-002"></td>' +
+      '<td><select class="js-r-field" data-field="bubble">' + opts(r.bubble) + '</select></td>' +
+      '<td><select class="js-r-field" data-field="frosted">' + opts(r.frosted) + '</select></td>' +
+      '<td><select class="js-r-field" data-field="label">' + opts(r.label) + '</select></td>' +
+      '<td class="actions"><button type="button" class="btn tiny danger act" data-js="del-rule" data-id="' + r.id + '">删除</button></td>' +
+    '</tr>';
+  }).join('');
+}
+
+// ---------- 渲染：售后表 ----------
+function renderAfterSales(){
+  const tb = document.getElementById('after-tbody');
+  if(!state.afterSales.length){
+    tb.innerHTML = '<tr><td colspan="15" class="empty">还没有售后记录，先在上方新增。</td></tr>';
+    return;
+  }
+  tb.innerHTML = state.afterSales.map(function(a){
+    const imgs = (a.images || []).map(function(d){
+      return '<img class="thumb" src="' + d + '" alt="">';
+    }).join('');
+    return '<tr data-id="' + a.id + '">' +
+      '<td>' + esc(fmtDT(a.time)) + '</td>' +
+      '<td>' + esc(fmtDT(a.after)) + '</td>' +
+      '<td>' + esc(a.orderNo) + '</td>' +
+      '<td>' + esc(a.product) + '</td>' +
+      '<td>' + esc(a.sku) + '</td>' +
+      '<td class="img-cell">' + (imgs || '<span class="tag gray">无</span>') + '</td>' +
+      '<td>' + esc(a.type) + '</td>' +
+      '<td>' + esc(a.reason) + '</td>' +
+      '<td>' + esc(a.desc) + '</td>' +
+      '<td>' + esc(a.status) + '</td>' +
+      '<td>' + esc(a.returned) + '</td>' +
+      '<td class="num">' + (Number(a.freight) || 0).toFixed(2) + '</td>' +
+      '<td>' + esc(a.returnNo) + '</td>' +
+      '<td>' + esc(fmtDT(a.recv)) + '</td>' +
+      '<td class="actions">' +
+        '<button type="button" class="btn tiny act" data-js="edit-after" data-id="' + a.id + '">编辑</button>' +
+        '<button type="button" class="btn tiny danger act" data-js="del-after" data-id="' + a.id + '">删除</button>' +
+      '</td>' +
+    '</tr>';
+  }).join('');
+}
+
+// ---------- 渲染：汇率 ----------
+function renderRates(){
+  const tb = document.getElementById('rates-tbody');
+  const list = state.rates.slice().sort(function(a, b){
+    return a.date < b.date ? 1 : (a.date > b.date ? -1 : 0);
+  });
+  if(!list.length){
+    tb.innerHTML = '<tr><td colspan="3" class="empty">还没有维护每日汇率，系统会使用默认汇率。</td></tr>';
+    return;
+  }
+  tb.innerHTML = list.map(function(r){
+    return '<tr data-id="' + r.date + '">' +
+      '<td>' + esc(r.date) + '</td>' +
+      '<td class="num">' + Number(r.rate).toFixed(4) + '</td>' +
+      '<td class="actions"><button type="button" class="btn tiny danger act" data-js="del-rate" data-date="' + esc(r.date) + '">删除</button></td>' +
+    '</tr>';
+  }).join('');
+}
+
+// ---------- 渲染：账号 ----------
+function renderUsers(){
+  const tb = document.getElementById('users-tbody');
+  api('GET', '/api/users').then(function(data){
+    tb.innerHTML = data.users.map(function(u){
+      const tabs = Array.isArray(u.tabs) && u.tabs.length ? u.tabs : userDefaultTabs(u);
+      return '<tr data-id="' + u.id + '">' +
+        '<td>' + esc(u.name) + (u.id === currentUser.id ? '（我）' : '') + '</td>' +
+        '<td><input class="js-u-phone" data-id="' + u.id + '" value="' + esc(u.phone) + '"></td>' +
+        '<td>' + esc(u.password || '（已加密，可重置）') + '</td>' +
+        '<td><select class="js-u-role" data-id="' + u.id + '">' +
+          '<option value="admin"' + (u.role === 'admin' ? ' selected' : '') + '>管理员</option>' +
+          '<option value="editor"' + (u.role === 'editor' ? ' selected' : '') + '>编辑</option>' +
+          '<option value="viewer"' + (u.role === 'viewer' ? ' selected' : '') + '>只读</option>' +
+          '<option value="samples"' + (u.role === 'samples' ? ' selected' : '') + '>样衣专员</option>' +
+        '</select></td>' +
+        '<td><details class="user-tabs"><summary>设置可见表格</summary><div class="tab-checks">' +
+          ALL_TABS.map(function(tab){
+            const checked = tabs.indexOf(tab) > -1 ? ' checked' : '';
+            return '<label><input type="checkbox" class="js-u-tab" data-id="' + u.id + '" data-tab="' + tab + '"' + checked + '> ' + TAB_NAMES[tab] + '</label>';
+          }).join('') +
+        '</div></details></td>' +
+        '<td class="actions">' +
+          '<button type="button" class="btn tiny act" data-js="reset-pw" data-id="' + u.id + '">重置密码</button>' +
+          '<button type="button" class="btn tiny danger act" data-js="del-user" data-id="' + u.id + '">删除</button>' +
+        '</td>' +
+      '</tr>';
+    }).join('');
+  }).catch(function(e){
+    tb.innerHTML = '<tr><td colspan="6" class="empty">加载失败：' + esc(e.message) + '</td></tr>';
+  });
+}
+
+function userDefaultTabs(u){
+  return u.role === 'samples' ? ['samples'] : ALL_TABS.slice();
+}
+
+function renderAll(){
+  if(canSee('sales')) renderSales();
+  if(canSee('profit')) renderProfit();
+  if(canSee('materials')) renderMaterials();
+  if(canSee('materialrefs')) renderMaterialRefs();
+  if(canSee('samples')) renderSamples();
+  if(canSee('rules')) renderRules();
+  if(canSee('aftersales')) renderAfterSales();
+  if(canSee('rates')) renderRates();
+  if(canSee('options')) renderOptions();
+  renderSummary();
+}
+
+// ---------- 销售表表单 ----------
+function updateRateHint(){
+  const date = (document.getElementById('f-time').value || '').slice(0, 10);
+  const rate = getRate(date);
+  document.getElementById('rate-hint').textContent = '下单日期 ' + (date || '今天') + ' 的换算汇率：1 USD = ' + rate.toFixed(4) + ' CNY（可在「汇率设置」里维护当日汇率）';
+}
+
+function itemRowHtml(it, i){
+  return '<div class="item-row" data-i="' + i + '">' +
+    '<input class="js-i-product" value="' + esc(it.product) + '" placeholder="产品名*">' +
+    '<input class="js-i-sku" value="' + esc(it.sku) + '" placeholder="SKU* 如 LF-JK-002-BR-L">' +
+    '<input class="js-i-qty" type="number" min="1" step="1" value="' + (Number(it.qty) || 1) + '">' +
+    '<input class="js-i-usd" type="number" min="0" step="0.01" value="' + (Number(it.usd) || 0) + '">' +
+    '<span class="cny-preview">¥0.00</span>' +
+    '<button type="button" class="btn tiny danger act js-remove-item">×</button>' +
+  '</div>';
+}
+
+function renderItemRows(items){
+  const box = document.getElementById('order-items');
+  box.innerHTML = items.map(function(it, i){ return itemRowHtml(it, i); }).join('');
+  updateItemPreviews();
+  updateRateHint();
+}
+
+function updateItemPreviews(){
+  const date = (document.getElementById('f-time').value || '').slice(0, 10);
+  const rate = getRate(date);
+  const rows = document.querySelectorAll('#order-items .item-row');
+  rows.forEach(function(row){
+    const usd = Number(row.querySelector('.js-i-usd').value) || 0;
+    row.querySelector('.cny-preview').textContent = '¥' + (usd * rate).toFixed(2);
+  });
+}
+
+function collectItems(){
+  const rows = document.querySelectorAll('#order-items .item-row');
+  const items = [];
+  rows.forEach(function(row){
+    items.push({
+      product: row.querySelector('.js-i-product').value.trim(),
+      sku: row.querySelector('.js-i-sku').value.trim(),
+      qty: Math.max(1, Number(row.querySelector('.js-i-qty').value) || 1),
+      usd: Number(row.querySelector('.js-i-usd').value) || 0,
+    });
+  });
+  return items;
+}
+
+function resetOrderForm(){
+  document.getElementById('f-time').value = nowLocalInput();
+  document.getElementById('f-order').value = '';
+  document.getElementById('f-freight').value = 0;
+  renderItemRows([{product:'', sku:'', qty:1, usd:0}]);
+  editingOrderId = null;
+  document.getElementById('btn-add-order').textContent = '添加订单';
+  document.getElementById('order-form-title').textContent = '添加订单';
+  document.getElementById('btn-cancel-edit').style.display = 'none';
+}
+
+function fillOrderForm(o){
+  editingOrderId = o.id;
+  document.getElementById('f-time').value = o.time || nowLocalInput();
+  document.getElementById('f-order').value = o.orderNo || '';
+  document.getElementById('f-freight').value = o.freight || 0;
+  renderItemRows(o.items && o.items.length ? o.items : [{product:'', sku:'', qty:1, usd:0}]);
+  document.getElementById('btn-add-order').textContent = '保存修改';
+  document.getElementById('order-form-title').textContent = '编辑订单';
+  document.getElementById('btn-cancel-edit').style.display = 'inline-flex';
+  document.getElementById('tab-sales').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+// ---------- 售后表单 ----------
+function resetAfterForm(){
+  const now = nowLocalInput();
+  document.getElementById('as-time').value = now;
+  document.getElementById('as-after').value = now;
+  document.getElementById('as-order').value = '';
+  document.getElementById('as-product').value = '';
+  document.getElementById('as-sku').value = '';
+  document.getElementById('as-type').value = '仅退款';
+  document.getElementById('as-reason').value = '质量问题';
+  document.getElementById('as-desc').value = '';
+  document.getElementById('as-status').value = '待审核';
+  document.getElementById('as-returned').value = '否';
+  document.getElementById('as-freight').value = 0;
+  document.getElementById('as-returnno').value = '';
+  document.getElementById('as-recv').value = '';
+  asImages = [];
+  renderAsPreviews();
+  editingAfterSaleId = null;
+  document.getElementById('btn-add-after').textContent = '添加售后单';
+  document.getElementById('after-form-title').textContent = '新增售后单';
+  document.getElementById('btn-cancel-after').style.display = 'none';
+}
+
+function fillAfterForm(a){
+  editingAfterSaleId = a.id;
+  document.getElementById('as-time').value = a.time || nowLocalInput();
+  document.getElementById('as-after').value = a.after || nowLocalInput();
+  document.getElementById('as-order').value = a.orderNo || '';
+  document.getElementById('as-product').value = a.product || '';
+  document.getElementById('as-sku').value = a.sku || '';
+  document.getElementById('as-type').value = a.type || '仅退款';
+  document.getElementById('as-reason').value = a.reason || '质量问题';
+  document.getElementById('as-desc').value = a.desc || '';
+  document.getElementById('as-status').value = a.status || '待审核';
+  document.getElementById('as-returned').value = a.returned || '否';
+  document.getElementById('as-freight').value = a.freight || 0;
+  document.getElementById('as-returnno').value = a.returnNo || '';
+  document.getElementById('as-recv').value = a.recv || '';
+  asImages = (a.images || []).slice();
+  renderAsPreviews();
+  document.getElementById('btn-add-after').textContent = '保存修改';
+  document.getElementById('after-form-title').textContent = '编辑售后单';
+  document.getElementById('btn-cancel-after').style.display = 'inline-flex';
+}
+
+function renderAsPreviews(){
+  const box = document.getElementById('as-img-preview');
+  box.innerHTML = asImages.map(function(d, i){
+    return '<span class="img-thumb-wrap"><img class="thumb" src="' + d + '" alt=""><button type="button" class="btn tiny danger act" data-js="remove-as-img" data-i="' + i + '">×</button></span>';
+  }).join('') || '<span class="hint">尚未上传图片</span>';
+}
+
+function asAddFiles(files){
+  Array.from(files).forEach(function(file){
+    const reader = new FileReader();
+    reader.onload = function(ev){
+      const img = new Image();
+      img.onload = function(){
+        const max = 240;
+        let w = img.width, h = img.height;
+        if(w > max || h > max){
+          const scale = Math.min(max / w, max / h);
+          w = Math.round(w * scale);
+          h = Math.round(h * scale);
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = w;
+        canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        asImages.push(canvas.toDataURL('image/jpeg', 0.85));
+        renderAsPreviews();
+      };
+      img.onerror = function(){ toast('图片读取失败，请换一张'); };
+      img.src = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+// ---------- 导出下载 ----------
+function download(filename, blob){
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(function(){
+    URL.revokeObjectURL(a.href);
+    a.remove();
+  }, 1000);
+}
+
+// ---------- 事件 ----------
+document.getElementById('btn-login').addEventListener('click', async function(){
+  const phone = document.getElementById('login-phone').value.trim();
+  const password = document.getElementById('login-password').value;
+  document.getElementById('login-err').textContent = '';
+  if(!phone || !password){
+    document.getElementById('login-err').textContent = '请输入手机号和密码';
+    return;
+  }
+  try{
+    const data = await api('POST', '/api/login', {phone:phone, password:password});
+    localStorage.setItem(TOKEN_KEY, data.token);
+    currentUser = data.user;
+    const d = await api('GET', '/api/state');
+    state = d.state;
+    ensureStateDefaults();
+    enterApp();
+    resetOrderForm();
+    resetAfterForm();
+    resetSampleForm();
+    if(state.defaultRate !== undefined) document.getElementById('rate-default').value = state.defaultRate;
+    document.getElementById('rate-date').value = todayStr();
+    toast('欢迎回来，' + currentUser.name);
+  }catch(e){
+    document.getElementById('login-err').textContent = (e && e.message) ? e.message : '登录失败，请重试';
+  }
+});
+
+document.getElementById('btn-logout').addEventListener('click', async function(){
+  try{ await api('POST', '/api/logout'); }catch(e){}
+  localStorage.removeItem(TOKEN_KEY);
+  currentUser = null;
+  state = null;
+  showLogin();
+});
+
+document.getElementById('btn-change-pw').addEventListener('click', async function(){
+  const oldPw = prompt('请输入当前密码');
+  if(oldPw === null) return;
+  const newPw = prompt('请输入新密码（至少4位）');
+  if(newPw === null) return;
+  if(!newPw || newPw.length < 4){
+    toast('新密码至少 4 位');
+    return;
+  }
+  try{
+    await api('PUT', '/api/users/' + currentUser.id, {oldPassword:oldPw, password:newPw});
+    toast('密码已修改，请记住新密码');
+  }catch(e){
+    toast(e.message);
+  }
+});
+
+document.getElementById('btn-add-item').addEventListener('click', function(){
+  renderItemRows(collectItems().concat([{product:'', sku:'', qty:1, usd:0}]));
+});
+
+document.getElementById('order-items').addEventListener('click', function(e){
+  if(e.target.classList.contains('js-remove-item')){
+    const rows = document.querySelectorAll('#order-items .item-row');
+    if(rows.length <= 1){
+      toast('至少保留一个商品');
+      return;
+    }
+    e.target.closest('.item-row').remove();
+  }
+});
+
+document.getElementById('order-items').addEventListener('input', function(e){
+  if(e.target.classList.contains('js-i-usd')) updateItemPreviews();
+});
+
+document.getElementById('f-time').addEventListener('change', function(){
+  updateItemPreviews();
+  updateRateHint();
+});
+
+document.getElementById('btn-add-order').addEventListener('click', function(){
+  const time = document.getElementById('f-time').value || nowLocalInput();
+  const orderNo = document.getElementById('f-order').value.trim();
+  const freight = Number(document.getElementById('f-freight').value) || 0;
+  const items = collectItems();
+  if(!orderNo){
+    toast('请先填写订单号');
+    return;
+  }
+  if(!items.some(function(it){ return it.product && it.sku; })){
+    toast('至少一个商品要填产品名和SKU');
+    return;
+  }
+  if(editingOrderId){
+    const target = state.orders.find(function(x){ return x.id === editingOrderId; });
+    if(target){
+      target.time = time;
+      target.orderNo = orderNo;
+      target.freight = freight;
+      target.items = items;
+      toast('订单已更新，库存和利润已重新计算');
+    }
+  }else{
+    state.orders.push({id:uid('o'), time:time, orderNo:orderNo, freight:freight, items:items});
+    const matched = items.filter(function(it){ return matchRule(it); }).length;
+    toast(matched > 0 ? '订单已添加，辅料已自动扣减' : '订单已添加（未匹配耗用规则，不扣库存）');
+  }
+  scheduleSave();
+  resetOrderForm();
+  renderAll();
+});
+
+document.getElementById('btn-cancel-edit').addEventListener('click', function(){
+  resetOrderForm();
+});
+
+document.getElementById('btn-batch').addEventListener('click', function(){
+  const text = document.getElementById('batch-orders').value;
+  const lines = text.split(/\r?\n|,|，/).map(function(s){ return s.trim(); }).filter(Boolean);
+  if(!lines.length){
+    toast('请先粘贴订单号');
+    return;
+  }
+  const time = nowLocalInput();
+  lines.forEach(function(line){
+    state.orders.push({id:uid('o'), time:time, orderNo:line, freight:0, items:[{product:'', sku:'', qty:1, usd:0}]});
+  });
+  scheduleSave();
+  renderAll();
+  toast('已添加 ' + lines.length + ' 条订单（商品信息待补）');
+  document.getElementById('batch-orders').value = '';
+});
+
+document.getElementById('order-search').addEventListener('input', function(e){
+  orderFilter = e.target.value;
+  renderSales();
+});
+
+document.getElementById('profit-search').addEventListener('input', function(e){
+  profitFilter = e.target.value;
+  renderProfit();
+});
+
+document.getElementById('btn-add-mat').addEventListener('click', function(){
+  const n = state.materials.filter(function(m){ return m.name.indexOf('新辅料') === 0; }).length + 1;
+  state.materials.push({id:uid('m'), name:'新辅料 ' + n, initialStock:0, warning:0, supplier:'', image:''});
+  scheduleSave();
+  renderAll();
+  toast('已新增一行辅料，请修改名称');
+});
+
+document.getElementById('btn-add-rule').addEventListener('click', function(){
+  const first = state.materials[0] ? state.materials[0].id : '';
+  state.rules.push({id:uid('r'), key:'', bubble:first, frosted:first, label:first});
+  scheduleSave();
+  renderAll();
+  toast('已新增一行规则，请填款式号 SKU，如 LF-JK-002');
+});
+
+document.getElementById('btn-add-sample').addEventListener('click', function(){
+  const s = collectSampleForm();
+  if(!s.product && !s.sku){
+    toast('请至少填写产品或 SKU');
+    return;
+  }
+  if(editingSampleId){
+    const target = state.samples.find(function(x){ return x.id === editingSampleId; });
+    if(target) Object.assign(target, s);
+    toast('样衣已更新');
+  }else{
+    if(s.sku && state.samples.some(function(x){ return x.sku === s.sku; })){
+      toast('该 SKU 已存在，请直接编辑原有那行');
+      return;
+    }
+    s.id = uid('s');
+    state.samples.push(s);
+    toast('样衣已入库');
+  }
+  scheduleSave();
+  resetSampleForm();
+  renderAll();
+});
+
+document.getElementById('btn-cancel-sample').addEventListener('click', function(){
+  resetSampleForm();
+});
+
+document.getElementById('btn-add-after').addEventListener('click', function(){
+  const a = {
+    time: document.getElementById('as-time').value || nowLocalInput(),
+    after: document.getElementById('as-after').value || nowLocalInput(),
+    orderNo: document.getElementById('as-order').value.trim(),
+    product: document.getElementById('as-product').value.trim(),
+    sku: document.getElementById('as-sku').value.trim(),
+    type: document.getElementById('as-type').value,
+    reason: document.getElementById('as-reason').value,
+    desc: document.getElementById('as-desc').value.trim(),
+    status: document.getElementById('as-status').value,
+    returned: document.getElementById('as-returned').value,
+    freight: Number(document.getElementById('as-freight').value) || 0,
+    returnNo: document.getElementById('as-returnno').value.trim(),
+    recv: document.getElementById('as-recv').value || '',
+    images: asImages.slice(),
+  };
+  if(!a.orderNo){
+    toast('请填写订单号');
+    return;
+  }
+  if(editingAfterSaleId){
+    const target = state.afterSales.find(function(x){ return x.id === editingAfterSaleId; });
+    if(target) Object.assign(target, a);
+    toast('售后单已更新');
+  }else{
+    a.id = uid('a');
+    state.afterSales.push(a);
+    toast('售后单已添加');
+  }
+  scheduleSave();
+  resetAfterForm();
+  renderAll();
+});
+
+document.getElementById('btn-cancel-after').addEventListener('click', function(){
+  resetAfterForm();
+});
+
+document.getElementById('as-img').addEventListener('change', function(e){
+  asAddFiles(e.target.files);
+  e.target.value = '';
+});
+
+document.getElementById('btn-save-default').addEventListener('click', function(){
+  state.defaultRate = Math.max(0, Number(document.getElementById('rate-default').value) || 0);
+  scheduleSave();
+  renderAll();
+  toast('默认汇率已保存');
+});
+
+document.getElementById('btn-add-rate').addEventListener('click', function(){
+  const date = document.getElementById('rate-date').value;
+  const rate = Number(document.getElementById('rate-value').value);
+  if(!date || isNaN(rate) || rate <= 0){
+    toast('请填写日期和正确的汇率');
+    return;
+  }
+  const exist = state.rates.find(function(r){ return r.date === date; });
+  if(exist){
+    exist.rate = rate;
+  }else{
+    state.rates.push({date:date, rate:rate});
+  }
+  scheduleSave();
+  renderAll();
+  toast('当日汇率已保存');
+});
+
+document.getElementById('btn-add-user').addEventListener('click', async function(){
+  const name = document.getElementById('u-name').value.trim();
+  const phone = document.getElementById('u-phone').value.trim();
+  const role = document.getElementById('u-role').value;
+  const password = document.getElementById('u-password').value;
+  try{
+    await api('POST', '/api/users', {name:name, phone:phone, role:role, password:password});
+    document.getElementById('u-name').value = '';
+    document.getElementById('u-phone').value = '';
+    document.getElementById('u-password').value = '';
+    renderUsers();
+    toast('账号已添加');
+  }catch(e){
+    toast(e.message);
+  }
+});
+
+document.getElementById('btn-backup').addEventListener('click', async function(){
+  try{
+    const d = await api('GET', '/api/state');
+    const blob = new Blob([JSON.stringify({version:2, savedAt:new Date().toISOString(), state:d.state}, null, 2)], {type:'application/json'});
+    download('LOSFOG-备份-' + todayStr() + '.json', blob);
+    toast('备份已导出');
+  }catch(e){
+    toast(e.message);
+  }
+});
+
+document.getElementById('import-file').addEventListener('change', async function(e){
+  const file = e.target.files[0];
+  if(!file) return;
+  try{
+    const text = await file.text();
+    const data = JSON.parse(text);
+    const s = data && data.state ? data.state : data;
+    if(!Array.isArray(s.orders) || !Array.isArray(s.materials) || !Array.isArray(s.rules)){
+      throw new Error('格式不正确');
+    }
+    s.samples = Array.isArray(s.samples) ? s.samples : [];
+    s.afterSales = Array.isArray(s.afterSales) ? s.afterSales : [];
+    s.rates = Array.isArray(s.rates) ? s.rates : [];
+    if(typeof s.defaultRate !== 'number') s.defaultRate = 7.1;
+    await api('PUT', '/api/state', {state:s});
+    state = s;
+    ensureStateDefaults();
+    document.getElementById('rate-default').value = state.defaultRate;
+    resetOrderForm();
+    resetAfterForm();
+    resetSampleForm();
+    renderAll();
+    toast('备份导入成功');
+  }catch(err){
+    alert('备份导入失败：' + err.message);
+  }
+  e.target.value = '';
+});
+
+document.getElementById('btn-csv').addEventListener('click', function(){
+  const header = ['下单时间','订单号','产品','SKU','数量','单价(USD)','单价(CNY)','运费','总价(CNY)'];
+  const rows = [header];
+  state.orders.forEach(function(o){
+    const rate = getRate((o.time || '').slice(0, 10));
+    const total = orderTotal(o);
+    const freight = Number(o.freight) || 0;
+    const items = o.items && o.items.length ? o.items : [{product:'', sku:'', qty:1, usd:0}];
+    items.forEach(function(it, idx){
+      const usd = Number(it.usd) || 0;
+      rows.push([
+        fmtDT(o.time), o.orderNo || '', it.product || '', it.sku || '',
+        Number(it.qty) || 0, usd.toFixed(2), (usd * rate).toFixed(2),
+        idx === 0 ? freight.toFixed(2) : '', idx === 0 ? total.toFixed(2) : '',
+      ]);
+    });
+  });
+  const csv = '\uFEFF' + rows.map(function(r){
+    return r.map(function(cell){
+      const s = String(cell == null ? '' : cell);
+      return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+    }).join(',');
+  }).join('\r\n');
+  download('销售表-' + todayStr() + '.csv', new Blob([csv], {type:'text/csv;charset=utf-8'}));
+  toast('销售CSV已导出');
+});
+
+// ---------- 单元格变更（辅料/样衣/规则/账号） ----------
+document.getElementById('tab-materials').addEventListener('change', function(e){
+  const t = e.target;
+  if(t.classList.contains('js-img')){
+    handleImageUpload(t);
+    return;
+  }
+  const tr = t.closest('tr');
+  if(!tr) return;
+  const m = state.materials.find(function(x){ return x.id === tr.dataset.id; });
+  if(!m) return;
+  if(t.classList.contains('js-m-name')){
+    m.name = t.value.trim() || '未命名辅料';
+  }else if(t.classList.contains('js-m-initial')){
+    m.initialStock = Math.max(0, Math.floor(Number(t.value) || 0));
+  }else if(t.classList.contains('js-m-warning')){
+    m.warning = Math.max(0, Math.floor(Number(t.value) || 0));
+  }else if(t.classList.contains('js-m-supplier')){
+    m.supplier = t.value.trim();
+  }
+  scheduleSave();
+  renderAll();
+});
+
+document.getElementById('sp-image').addEventListener('change', function(e){
+  const file = e.target.files && e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev){
+    const img = new Image();
+    img.onload = function(){
+      const max = 240;
+      let w = img.width, h = img.height;
+      if(w > max || h > max){
+        const scale = Math.min(max / w, max / h);
+        w = Math.round(w * scale);
+        h = Math.round(h * scale);
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = w;
+      canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      spImage = canvas.toDataURL('image/jpeg', 0.85);
+      renderSpImagePreview();
+    };
+    img.onerror = function(){ toast('图片读取失败，请换一张'); };
+    img.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
+  e.target.value = '';
+});
+
+document.getElementById('sp-files').addEventListener('change', function(e){
+  Array.from(e.target.files).forEach(function(file){
+    const reader = new FileReader();
+    reader.onload = function(ev){
+      const data = ev.target.result;
+      if(String(data).indexOf('data:image') === 0){
+        const img = new Image();
+        img.onload = function(){
+          const max = 240;
+          let w = img.width, h = img.height;
+          if(w > max || h > max){
+            const scale = Math.min(max / w, max / h);
+            w = Math.round(w * scale);
+            h = Math.round(h * scale);
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = w;
+          canvas.height = h;
+          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+          spAttachments.push(canvas.toDataURL('image/jpeg', 0.85));
+          renderSpFilesPreview();
+        };
+        img.onerror = function(){ toast('附件读取失败，请换一个'); };
+        img.src = data;
+      }else{
+        spAttachments.push(data);
+        renderSpFilesPreview();
+      }
+    };
+    reader.readAsDataURL(file);
+  });
+  e.target.value = '';
+});
+
+document.getElementById('btn-add-ref').addEventListener('click', function(){
+  state.materialRefs.push({id:uid('r'), name:'新辅料', image:'', supplier:'', moq:'', price:0, link:''});
+  scheduleSave();
+  renderAll();
+  toast('已新增一行辅料（采购参考），请修改名称');
+});
+
+document.getElementById('tab-materialrefs').addEventListener('change', function(e){
+  const t = e.target;
+  if(t.classList.contains('js-rf-img')){
+    handleRefImageUpload(t);
+    return;
+  }
+  const tr = t.closest('tr');
+  if(!tr) return;
+  const r = state.materialRefs.find(function(x){ return x.id === tr.dataset.id; });
+  if(!r) return;
+  if(t.classList.contains('js-rf-name')){
+    r.name = t.value.trim() || '未命名辅料';
+  }else if(t.classList.contains('js-rf-supplier')){
+    r.supplier = t.value.trim();
+  }else if(t.classList.contains('js-rf-moq')){
+    r.moq = t.value.trim();
+  }else if(t.classList.contains('js-rf-price')){
+    r.price = Math.max(0, Number(t.value) || 0);
+  }else if(t.classList.contains('js-rf-link')){
+    r.link = t.value.trim();
+  }
+  scheduleSave();
+  renderAll();
+});
+
+function addOption(key, inputId){
+  const v = document.getElementById(inputId).value.trim();
+  if(!v){
+    toast('请先输入选项内容');
+    return;
+  }
+  if(state[key].indexOf(v) > -1){
+    toast('该选项已存在');
+    return;
+  }
+  state[key].push(v);
+  document.getElementById(inputId).value = '';
+  scheduleSave();
+  renderAll();
+  toast('选项已添加');
+}
+
+document.getElementById('btn-add-supplier-opt').addEventListener('click', function(){
+  addOption('supplierOptions', 'opt-supplier-input');
+});
+document.getElementById('btn-add-model-opt').addEventListener('click', function(){
+  addOption('modelOptions', 'opt-model-input');
+});
+document.getElementById('btn-add-color-opt').addEventListener('click', function(){
+  addOption('colorOptions', 'opt-color-input');
+});
+
+document.getElementById('tab-rules').addEventListener('change', function(e){
+  const t = e.target;
+  if(!t.classList.contains('js-r-field') && !t.classList.contains('js-r-key')) return;
+  const tr = t.closest('tr');
+  if(!tr) return;
+  const r = state.rules.find(function(x){ return x.id === tr.dataset.id; });
+  if(!r) return;
+  if(t.classList.contains('js-r-key')){
+    r.key = t.value.trim();
+  }else{
+    r[t.dataset.field] = t.value;
+  }
+  scheduleSave();
+  renderAll();
+});
+
+document.getElementById('tab-users').addEventListener('change', async function(e){
+  const t = e.target;
+  if(t.classList.contains('js-u-tab')){
+    const id = t.dataset.id;
+    const tabs = [];
+    document.querySelectorAll('.js-u-tab[data-id="' + id + '"]').forEach(function(b){
+      if(b.checked) tabs.push(b.dataset.tab);
+    });
+    try{
+      const data = await api('PUT', '/api/users/' + id, {tabs:tabs});
+      if(currentUser.id === id){
+        currentUser.tabs = data.user.tabs;
+        applyRole();
+      }
+      toast('可见表格已更新');
+    }catch(err){
+      toast(err.message);
+      renderUsers();
+    }
+    return;
+  }
+  if(t.classList.contains('js-u-role')){
+    try{
+      const data = await api('PUT', '/api/users/' + t.dataset.id, {role:t.value});
+      if(currentUser.id === t.dataset.id){
+        currentUser.role = data.user.role;
+        applyRole();
+      }
+      renderUsers();
+      toast('角色已更新');
+    }catch(err){
+      toast(err.message);
+      renderUsers();
+    }
+    return;
+  }
+  if(t.classList.contains('js-u-phone')){
+    const phone = t.value.trim();
+    if(!phone){
+      toast('手机号不能为空');
+      renderUsers();
+      return;
+    }
+    try{
+      const data = await api('PUT', '/api/users/' + t.dataset.id, {phone:phone});
+      if(currentUser.id === t.dataset.id){
+        currentUser.phone = data.user.phone;
+      }
+      renderUsers();
+      toast(currentUser.id === t.dataset.id ? '手机号已修改，下次登录请用新手机号' : '手机号已修改');
+    }catch(err){
+      toast(err.message);
+      renderUsers();
+    }
+  }
+});
+
+// ---------- 全局按钮 ----------
+document.addEventListener('click', async function(e){
+  const btn = e.target.closest('[data-js]');
+  if(!btn) return;
+  const action = btn.dataset.js;
+  const id = btn.dataset.id;
+
+  if(action === 'edit-order'){
+    const o = state.orders.find(function(x){ return x.id === id; });
+    if(o) fillOrderForm(o);
+    return;
+  }
+  if(action === 'del-order'){
+    if(!confirm('确定删除这条订单吗？删除后库存和利润会自动恢复。')) return;
+    state.orders = state.orders.filter(function(x){ return x.id !== id; });
+    if(editingOrderId === id) resetOrderForm();
+    scheduleSave();
+    renderAll();
+    toast('订单已删除');
+    return;
+  }
+  if(action === 'edit-after'){
+    const a = state.afterSales.find(function(x){ return x.id === id; });
+    if(a) fillAfterForm(a);
+    return;
+  }
+  if(action === 'del-after'){
+    if(!confirm('确定删除这条售后记录吗？')) return;
+    state.afterSales = state.afterSales.filter(function(x){ return x.id !== id; });
+    if(editingAfterSaleId === id) resetAfterForm();
+    scheduleSave();
+    renderAfterSales();
+    toast('售后记录已删除');
+    return;
+  }
+  if(action === 'remove-as-img'){
+    const i = Number(btn.dataset.i);
+    asImages.splice(i, 1);
+    renderAsPreviews();
+    return;
+  }
+  if(action === 'remove-img'){
+    const m = state.materials.find(function(x){ return x.id === id; });
+    if(m) m.image = '';
+    scheduleSave();
+    renderMaterials();
+    renderSummary();
+    return;
+  }
+  if(action === 'del-mat'){
+    if(!confirm('确定删除这个辅料吗？相关耗用规则会同时清空该辅料选项。')) return;
+    state.materials = state.materials.filter(function(x){ return x.id !== id; });
+    state.rules.forEach(function(r){
+      if(r.bubble === id) r.bubble = '';
+      if(r.frosted === id) r.frosted = '';
+      if(r.label === id) r.label = '';
+    });
+    scheduleSave();
+    renderAll();
+    toast('辅料已删除');
+    return;
+  }
+  if(action === 'edit-sample'){
+    const s = state.samples.find(function(x){ return x.id === id; });
+    if(s) fillSampleForm(s);
+    return;
+  }
+  if(action === 'del-sample'){
+    if(!confirm('确定删除这个样衣吗？删除后相关订单的利润会变成「待补成本」。')) return;
+    state.samples = state.samples.filter(function(x){ return x.id !== id; });
+    scheduleSave();
+    renderAll();
+    toast('样衣已删除');
+    return;
+  }
+  if(action === 'remove-sp-image'){
+    spImage = '';
+    renderSpImagePreview();
+    return;
+  }
+  if(action === 'remove-sp-file'){
+    spAttachments.splice(Number(btn.dataset.i), 1);
+    renderSpFilesPreview();
+    return;
+  }
+  if(action === 'del-opt'){
+    state[btn.dataset.key].splice(Number(btn.dataset.i), 1);
+    scheduleSave();
+    renderAll();
+    return;
+  }
+  if(action === 'remove-ref-img'){
+    const r = state.materialRefs.find(function(x){ return x.id === id; });
+    if(r) r.image = '';
+    scheduleSave();
+    renderMaterialRefs();
+    return;
+  }
+  if(action === 'del-ref'){
+    if(!confirm('确定删除这条辅料采购记录吗？')) return;
+    state.materialRefs = state.materialRefs.filter(function(x){ return x.id !== id; });
+    scheduleSave();
+    renderMaterialRefs();
+    toast('已删除');
+    return;
+  }
+  if(action === 'del-rule'){
+    state.rules = state.rules.filter(function(x){ return x.id !== id; });
+    scheduleSave();
+    renderRules();
+    toast('规则已删除');
+    return;
+  }
+  if(action === 'del-rate'){
+    const date = btn.dataset.date;
+    state.rates = state.rates.filter(function(r){ return r.date !== date; });
+    scheduleSave();
+    renderAll();
+    toast('该日汇率已删除');
+    return;
+  }
+  if(action === 'reset-pw'){
+    const pw = prompt('请输入该账号的新密码（至少4位）');
+    if(!pw || pw.length < 4){
+      toast('密码至少 4 位');
+      return;
+    }
+    try{
+      await api('PUT', '/api/users/' + id, {password:pw});
+      toast('密码已重置');
+    }catch(err){
+      toast(err.message);
+    }
+    return;
+  }
+  if(action === 'del-user'){
+    if(!confirm('确定删除这个账号吗？')) return;
+    try{
+      await api('DELETE', '/api/users/' + id);
+      renderUsers();
+      toast('账号已删除');
+    }catch(err){
+      toast(err.message);
+    }
+  }
+});
+
+function handleRefImageUpload(input){
+  const id = input.dataset.id;
+  const file = input.files && input.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev){
+    const img = new Image();
+    img.onload = function(){
+      const max = 240;
+      let w = img.width, h = img.height;
+      if(w > max || h > max){
+        const scale = Math.min(max / w, max / h);
+        w = Math.round(w * scale);
+        h = Math.round(h * scale);
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = w;
+      canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      const r = state.materialRefs.find(function(x){ return x.id === id; });
+      if(!r) return;
+      r.image = canvas.toDataURL('image/jpeg', 0.85);
+      scheduleSave();
+      renderMaterialRefs();
+      toast('图片已更新');
+    };
+    img.onerror = function(){ toast('图片读取失败，请换一张'); };
+    img.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
+  input.value = '';
+}
+
+function handleImageUpload(input){
+  const id = input.dataset.id;
+  const file = input.files && input.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev){
+    const img = new Image();
+    img.onload = function(){
+      const max = 240;
+      let w = img.width, h = img.height;
+      if(w > max || h > max){
+        const scale = Math.min(max / w, max / h);
+        w = Math.round(w * scale);
+        h = Math.round(h * scale);
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = w;
+      canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      const m = state.materials.find(function(x){ return x.id === id; });
+      if(!m) return;
+      m.image = canvas.toDataURL('image/jpeg', 0.85);
+      scheduleSave();
+      renderMaterials();
+      renderSummary();
+      toast('图片已更新');
+    };
+    img.onerror = function(){ toast('图片读取失败，请换一张'); };
+    img.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
+  input.value = '';
+}
+
+// ---------- 标签页 ----------
+document.querySelectorAll('.tab-btn').forEach(function(b){
+  b.addEventListener('click', function(){
+    document.querySelectorAll('.tab-btn').forEach(function(x){ x.classList.remove('active'); });
+    b.classList.add('active');
+    document.querySelectorAll('section').forEach(function(s){ s.classList.remove('active'); });
+    document.getElementById(b.dataset.tab).classList.add('active');
+    if(b.dataset.tab === 'tab-users') renderUsers();
+  });
+});
+
+// ---------- 启动 ----------
+async function init(){
+  const token = localStorage.getItem(TOKEN_KEY);
+  if(!token){
+    showLogin();
+    return;
+  }
+  try{
+    const me = await api('GET', '/api/me');
+    currentUser = me.user;
+    const d = await api('GET', '/api/state');
+    state = d.state;
+    ensureStateDefaults();
+    enterApp();
+    resetOrderForm();
+    resetAfterForm();
+    resetSampleForm();
+    if(state.defaultRate !== undefined) document.getElementById('rate-default').value = state.defaultRate;
+    document.getElementById('rate-date').value = todayStr();
+  }catch(e){
+    showLogin();
+    if(e && e.message) document.getElementById('login-err').textContent = e.message;
+  }
+}
+
+init();
+</script>
+</body>
+</html>
