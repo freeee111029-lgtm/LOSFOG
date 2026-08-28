@@ -21,5 +21,5 @@ export default async function handler(req, res) {
   };
 
   const result = await createApiHandler(storage)(meta);
-  res.status(result.status).json(result.body);
+  res.status(result.statusCode).json(result.body);
 }
