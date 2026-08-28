@@ -1,36 +1,25 @@
-'use strict';
-const {
-  createApiHandler,
-  makeSupabaseStorage,
-} = require('./app-core.js');
+const { createApiHandler, makeSupabaseStorage } = require('../app-core');
 
-const handler = createApiHandler(makeSupabaseStorage());
+const storage = makeSupabaseStorage();
 
-module.exports = async function(req, res){
-  try{
-    const chunks = [];
-    for await (const chunk of req) chunks.push(chunk);
-    const bodyText = Buffer.concat(chunks).toString('utf8');
-    const pathname = req.url ? new URL(req.url, 'http://x').pathname : '/';
-    const result = await handler({
-      method: req.method,
-      path: pathname,
-      headers: req.headers,
-      bodyText: bodyText,
-    });
-    res.status(result.status);
-    res.setHeader('Content-Type', 'application/json; charset=utf-8');
-    res.setHeader('Cache-Control', 'no-store');
-    res.end(JSON.stringify(result.body));
-  }catch(e){
-    res.status(500);
-    res.setHeader('Content-Type', 'application/json; charset=utf-8');
-    res.end(JSON.stringify({error: e.message || '服务器错误'}));
+export const config = {
+  api: {
+    bodyParser: false
   }
 };
 
-module.exports.config = {
-  api: {
-    bodyParser: false,
-  },
-};
+export default async function handler(req, res) {
+  const meta = {
+    method: req.method,
+    path: req.url,
+    headers: req.headers,
+    bodyText: await new Promise((resolve) => {
+      let buf = '';
+      req.on('data', chunk => buf += chunk.toString());
+      req.on('end', () => resolve(buf));
+    })
+  };
+
+  const result = await createApiHandler(storage)(meta);
+  res.status(result.status).json(result.body);
+}
