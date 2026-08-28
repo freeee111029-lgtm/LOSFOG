@@ -2,7 +2,7 @@
 const {
   createApiHandler,
   makeSupabaseStorage,
-} = require('../app-core.js');
+} = require('./app-core.js');
 
 const handler = createApiHandler(makeSupabaseStorage());
 
